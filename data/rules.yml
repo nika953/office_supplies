@@ -1,0 +1,9 @@
+version: "3.1"
+
+rules:
+
+ - rule: user reports a missing item
+   steps:
+    - intent: inform_want_item
+    - action: utter_inform_want_item
+    - action: action_record_need_item

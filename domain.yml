@@ -1,0 +1,56 @@
+version: "3.1"
+
+intents:
+  - inform_need_item
+  - inform_want_item
+  - pen_color
+  - kind
+  - thickness_line
+
+entities:
+  - office_supplies
+  - color
+  - line_thickness
+  - type
+
+slots:
+  office_supplies:
+    type: categorical
+    values:
+      - ручки
+      - карандаша
+      - ластика
+    influence_conversation: true
+    mappings:
+    - type: from_entity
+      entity: office_supplies
+
+responses:
+
+  utter_inform_want_item:
+  - text: "Я подумаю об этом"
+  
+  utter_pen:
+  - text: "Какого цвета ручку вы бы хотели?"
+
+  utter_color:
+  - text: "Хороший выбор, какую ручку вы хотите?"
+
+  utter_kind:
+  - text: "А как насчет толщины линии, сколько мм она должна быть?"
+
+  utter_pensil:
+  - text: "Хорошо"
+
+  utter_eraser:
+  - text: "Может быть"
+
+
+actions:
+- action_record_need_item
+
+session_config:
+  session_expiration_time: 60
+  carry_over_slots_to_new_session: true
+
+

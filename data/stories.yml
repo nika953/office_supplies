@@ -1,0 +1,32 @@
+version: "3.1"
+
+stories:
+
+- story: happy path
+  steps:
+  - intent: inform_need_item
+  - slot_was_set:
+    - office_supplies: ручки
+  - action: utter_pen
+  - intent: pen_color
+  - action: utter_color
+  - intent: pen_kind
+  - action: utter_kind
+  - intent: thickness_line
+  - action: action_record_need_item
+
+- story: sad path 1
+  steps:
+  - intent: inform_need_item
+  - slot_was_set:
+    - office_supplies: карандаша
+  - action: utter_pensil
+  - action: action_record_need_item
+
+- story: sad path 2
+  steps:
+  - intent: inform_need_item
+  - slot_was_set:
+    - office_supplies: ластика
+  - action: utter_eraser
+  - action: action_record_need_item
