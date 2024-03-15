@@ -6,6 +6,9 @@ import os
 from googleapiclient.discovery import build
 import httplib2
 from oauth2client.service_account import ServiceAccountCredentials
+from vault import vault
+
+SPREADSHEET_ID = vault.retrieve_secret('SPREADSHEET_ID')
 
 
 class GoogleSheetsManager:
@@ -49,9 +52,8 @@ class ActionRecordMissingItem(Action):
 
     
         creds_json_path = os.path.join(os.path.dirname(__file__),"..", "key.json")
-        spreadsheet_id = '1zGhKyfuzf7IWOKcmt7THArsJ2ldUZjvAqUyYAIHIsyc'
 
-        manager = GoogleSheetsManager(creds_json_path, spreadsheet_id)
+        manager = GoogleSheetsManager(creds_json_path, SPREADSHEET_ID)
         missing_item = manager.extract_missing_item(message_text)
         print(missing_item)
         if missing_item:

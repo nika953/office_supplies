@@ -2,7 +2,7 @@
 # https://rasa.com/docs/rasa/model-configuration/
 recipe: default.v1
 
-assistant_id: 20240314-160238-red-coulomb
+assistant_id: 20240315-154859-worried-issue
 
 # Configuration for Rasa NLU.
 # https://rasa.com/docs/rasa/nlu/components/
