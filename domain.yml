@@ -6,12 +6,14 @@ intents:
   - pen_color
   - kind
   - thickness_line
+  - user_name
 
 entities:
   - office_supplies
   - color
-  - line_thickness
   - type
+  - line_thickness
+  - name
 
 slots:
   office_supplies:
@@ -24,11 +26,32 @@ slots:
     mappings:
     - type: from_entity
       entity: office_supplies
+      
+  color:
+    type: text
+    influence_conversation: false
+    mappings:
+    - type: from_entity
+      entity: color
+
+  type:
+    type: text
+    influence_conversation: false
+    mappings:
+    - type: from_entity
+      entity: type
+
+  name:
+    type: text
+    influence_conversation: false
+    mappings:
+    - type: from_entity
+      entity: name
 
 responses:
 
-  utter_inform_want_item:
-  - text: "Я подумаю об этом"
+  # utter_inform_want_item:
+  # - text: "Я подумаю об этом"
   
   utter_pen:
   - text: "Какого цвета ручку вы бы хотели?"
@@ -44,6 +67,9 @@ responses:
 
   utter_eraser:
   - text: "Может быть"
+
+  utter_username:
+  - text: "Напишите свое ФИО, чтобы я мог записать, что вам нужно."
 
 
 actions:

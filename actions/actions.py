@@ -8,23 +8,26 @@ import httplib2
 from oauth2client.service_account import ServiceAccountCredentials
 from vault import vault
 
+SERVICE_ACCOUNT = vault.retrieve_secret_as_file('google_sheets_service_account')
+# print(SERVICE_ACCOUNT)
+# print(type(SERVICE_ACCOUNT))
 SPREADSHEET_ID = vault.retrieve_secret('SPREADSHEET_ID')
 
 
 class GoogleSheetsManager:
 
-    def __init__(self, creds_json_path, spreadsheet_id):
-        self.creds_json_path = creds_json_path
+    def __init__(self, service_account_json, spreadsheet_id):
+        self.service_account_json = service_account_json
         self.spreadsheet_id = spreadsheet_id
 
     def get_service_sacc(self):
         scopes = ['https://www.googleapis.com/auth/spreadsheets']
-        creds_service = ServiceAccountCredentials.from_json_keyfile_name(self.creds_json_path, scopes).authorize(httplib2.Http())
+        creds_service = ServiceAccountCredentials.from_json_keyfile_dict(self.service_account_json, scopes).authorize(httplib2.Http())
         return build('sheets', 'v4', http=creds_service)
 
-    def record_to_sheet(self, item_name: str, range_name: str = 'Лист1!B:B'):
+    def record_to_sheet(self, user_name, item_name: str, description, range_name: str = 'Лист1!A:C'):
         service = self.get_service_sacc()
-        values = [[item_name]]
+        values = [[user_name, item_name, description]]
         body = {'values': values}
         
         result = service.spreadsheets().values().append(
@@ -33,33 +36,29 @@ class GoogleSheetsManager:
         
         print(f"{result.get('updates').get('updatedCells')} cells appended.")
 
-    @staticmethod
-    def extract_missing_item(text: str, prefix: str = "У меня нет ") -> str:
-        if text.startswith(prefix):
-            return text[len(prefix):]
-        return ""
-
-
 
 class ActionRecordMissingItem(Action):
     def name(self) -> Text:
         return "action_record_need_item"
 
     def run(self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
-        message_text = tracker.latest_message.get('text')
-        print(tracker.latest_message['intent']['name'])
-        print(tracker.get_slot('office_supplies'))
-
+        
+        # print(tracker.latest_message['intent']['name'])
+        # print(tracker.get_slot('office_supplies'))
+        # print(tracker.get_slot('color'))
+        # print(tracker.get_slot('kind'))
+        # print(tracker.get_slot('name'))
     
-        creds_json_path = os.path.join(os.path.dirname(__file__),"..", "key.json")
+        manager = GoogleSheetsManager(SERVICE_ACCOUNT, SPREADSHEET_ID)
+        user_name = tracker.get_slot('name')
+        missing_item = tracker.get_slot('office_supplies')
+        description_item = f"{tracker.get_slot('color')}, {tracker.get_slot('kind')}"
 
-        manager = GoogleSheetsManager(creds_json_path, SPREADSHEET_ID)
-        missing_item = manager.extract_missing_item(message_text)
-        print(missing_item)
         if missing_item:
-            manager.record_to_sheet(missing_item)
+            manager.record_to_sheet(user_name, missing_item, description_item)
             dispatcher.utter_message(text=f"Записал, что у вас нет {missing_item}. Что-нибудь еще?")
         else:
             dispatcher.utter_message(text="Я не понимаю, что вам не нужно. Можете уточнить?")
         
         return []
+    

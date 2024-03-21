@@ -9,11 +9,20 @@ stories:
     - office_supplies: ручки
   - action: utter_pen
   - intent: pen_color
+  - slot_was_set:
+    - color: 
   - action: utter_color
-  - intent: pen_kind
-  - action: utter_kind
-  - intent: thickness_line
+  - intent: kind
+  - slot_was_set:
+    - type: 
+  - action: utter_username
+  - intent: user_name
+  - slot_was_set:
+    - name: 
   - action: action_record_need_item
+
+  # - action: utter_kind
+  # - intent: thickness_line
 
 - story: sad path 1
   steps:
@@ -30,3 +39,22 @@ stories:
     - office_supplies: ластика
   - action: utter_eraser
   - action: action_record_need_item
+
+- story: sss
+  steps:
+  - intent: kind
+  - slot_was_set:
+    - type: 
+  - action: utter_username
+  - intent: user_name
+  - slot_was_set:
+    - name: 
+  - action: action_record_need_item
+  
+  ## проверка работы
+# - story: happy path 2
+#   steps:
+#   - intent: inform_need_item
+#   - slot_was_set:
+#     - office_supplies: ручки
+#   - action: action_record_need_item
