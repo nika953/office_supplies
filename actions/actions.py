@@ -2,16 +2,17 @@ from typing import Any, Text, Dict, List
 from rasa_sdk import Action, Tracker
 from rasa_sdk.executor import CollectingDispatcher
 
-import os
 from googleapiclient.discovery import build
 import httplib2
 from oauth2client.service_account import ServiceAccountCredentials
 from vault import vault
 
+import pymorphy2
+
 SERVICE_ACCOUNT = vault.retrieve_secret_as_file('google_sheets_service_account')
-# print(SERVICE_ACCOUNT)
-# print(type(SERVICE_ACCOUNT))
 SPREADSHEET_ID = vault.retrieve_secret('SPREADSHEET_ID')
+
+morph = pymorphy2.MorphAnalyzer()
 
 
 class GoogleSheetsManager:
@@ -25,7 +26,7 @@ class GoogleSheetsManager:
         creds_service = ServiceAccountCredentials.from_json_keyfile_dict(self.service_account_json, scopes).authorize(httplib2.Http())
         return build('sheets', 'v4', http=creds_service)
 
-    def record_to_sheet(self, user_name, item_name: str, description, range_name: str = 'Лист1!A:C'):
+    def record_to_sheet(self, user_name, item_name: str, description: str, range_name: str = 'Лист1!A:C'):
         service = self.get_service_sacc()
         values = [[user_name, item_name, description]]
         body = {'values': values}
@@ -43,20 +44,24 @@ class ActionRecordMissingItem(Action):
 
     def run(self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
         
-        # print(tracker.latest_message['intent']['name'])
-        # print(tracker.get_slot('office_supplies'))
-        # print(tracker.get_slot('color'))
-        # print(tracker.get_slot('kind'))
-        # print(tracker.get_slot('name'))
-    
         manager = GoogleSheetsManager(SERVICE_ACCOUNT, SPREADSHEET_ID)
         user_name = tracker.get_slot('name')
-        missing_item = tracker.get_slot('office_supplies')
-        description_item = f"{tracker.get_slot('color')}, {tracker.get_slot('kind')}"
+        missing_item = morph.parse(tracker.get_slot('office_supplies'))[0]
+        color_item = morph.parse(tracker.get_slot('color'))[0]
+        type_item = morph.parse(tracker.get_slot('type'))[0]
+
+        if color_item == None:
+            color_item = "" 
+
+        if type_item == None:
+            type_item = "" 
+
+        description_item = f"Цвет чернил: {color_item.inflect({'masc', 'sing', 'nomn'}).word}\nВид: {type_item.inflect({'femn', 'sing', 'nomn'}).word}"
+
 
         if missing_item:
-            manager.record_to_sheet(user_name, missing_item, description_item)
-            dispatcher.utter_message(text=f"Записал, что у вас нет {missing_item}. Что-нибудь еще?")
+            manager.record_to_sheet(user_name, missing_item.normal_form, description_item)
+            dispatcher.utter_message(text=f"Записал, что у вас нет {missing_item.inflect({'sing', 'gent'}).word}. Что-нибудь еще?")
         else:
             dispatcher.utter_message(text="Я не понимаю, что вам не нужно. Можете уточнить?")
         

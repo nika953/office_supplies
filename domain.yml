@@ -17,12 +17,8 @@ entities:
 
 slots:
   office_supplies:
-    type: categorical
-    values:
-      - ручки
-      - карандаша
-      - ластика
-    influence_conversation: true
+    type: text
+    influence_conversation: false
     mappings:
     - type: from_entity
       entity: office_supplies
@@ -49,9 +45,6 @@ slots:
       entity: name
 
 responses:
-
-  # utter_inform_want_item:
-  # - text: "Я подумаю об этом"
   
   utter_pen:
   - text: "Какого цвета ручку вы бы хотели?"
@@ -74,6 +67,14 @@ responses:
 
 actions:
 - action_record_need_item
+- utter_pen
+- utter_color
+- utter_kind
+- utter_pensil
+- utter_eraser
+- utter_username
+
+
 
 session_config:
   session_expiration_time: 60

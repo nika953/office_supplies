@@ -5,6 +5,7 @@ nlu:
 - lookup: color
   examples: |
     - чёрный
+    - черный
     - белый
     - синий
     - красный
@@ -30,16 +31,12 @@ nlu:
     - У меня нет [ручки](office_supplies)
     - У меня нет [карандаша](office_supplies)
     - У меня нет [ластика](office_supplies)
-  
-- intent: inform_want_item
-  examples: |
-    - Мне нужна книга
-    - Мне нужен пароль
-    - Мне нужен пароль администратора
+    - Мне нужна [ручка](office_supplies)
 
 - intent: pen_color
   examples: |
     - [чёрный](color)
+    - [черный](color)
     - [белый](color)
     - [синий](color)
     - [красный](color)

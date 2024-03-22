@@ -2,7 +2,7 @@
 # https://rasa.com/docs/rasa/model-configuration/
 recipe: default.v1
 
-assistant_id: 20240320-185503-sluggish-jail
+assistant_id: 20240322-100549-light-render
 # Configuration for Rasa NLU.
 # https://rasa.com/docs/rasa/nlu/components/
 language: ru
@@ -49,6 +49,6 @@ policies:
   max_history: 5
   epochs: 100
 - name: TEDPolicy
-  max_history: 5
+  max_history: 10
   epochs: 100
   constrain_similarities: true
