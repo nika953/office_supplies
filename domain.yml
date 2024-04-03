@@ -2,18 +2,17 @@ version: "3.1"
 
 intents:
   - inform_need_item
-  - inform_want_item
-  - pen_color
+  - item_color
   - kind
-  - thickness_line
   - user_name
+  - quantity
 
 entities:
   - office_supplies
   - color
   - type
-  - line_thickness
   - name
+  - number
 
 slots:
   office_supplies:
@@ -44,38 +43,50 @@ slots:
     - type: from_entity
       entity: name
 
+  quantity:
+    type: float
+    influence_conversation: false
+    mappings:
+      - type: from_entity
+        entity: number
+
 responses:
   
-  utter_pen:
-  - text: "Какого цвета ручку вы бы хотели?"
+  utter_ask_color:
+  - text: "Какого цвета предмет вы бы хотели?"
 
-  utter_color:
-  - text: "Хороший выбор, какую ручку вы хотите?"
+  utter_ask_type:
+  - text: "Хороший выбор, какой тип этого предмета вас интересует?"
 
-  utter_kind:
+  utter_ask_kind:
   - text: "А как насчет толщины линии, сколько мм она должна быть?"
 
-  utter_pensil:
-  - text: "Хорошо"
+  utter_ask_quantity:
+  - text: "Сколько вам нужно штук?"
 
-  utter_eraser:
-  - text: "Может быть"
-
-  utter_username:
+  utter_ask_name:
   - text: "Напишите свое ФИО, чтобы я мог записать, что вам нужно."
-
+  
 
 actions:
 - action_record_need_item
-- utter_pen
-- utter_color
-- utter_kind
-- utter_pensil
-- utter_eraser
-- utter_username
+- validate_office_supplies_form
+- required_slots
+- utter_ask_color
+- utter_ask_type
+- utter_ask_quantity
+- utter_ask_name
 
 
-
+forms:
+  office_supplies_form:
+      required_slots:
+          - office_supplies
+          - color
+          - type
+          - quantity
+          - name
+      
 session_config:
   session_expiration_time: 60
   carry_over_slots_to_new_session: true

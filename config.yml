@@ -2,7 +2,7 @@
 # https://rasa.com/docs/rasa/model-configuration/
 recipe: default.v1
 
-assistant_id: 20240322-100549-light-render
+assistant_id: 20240403-140213-livid-chain
 # Configuration for Rasa NLU.
 # https://rasa.com/docs/rasa/nlu/components/
 language: ru
@@ -46,9 +46,9 @@ policies:
 - name: MemoizationPolicy
 - name: RulePolicy
 - name: UnexpecTEDIntentPolicy
-  max_history: 5
+  max_history: 10
   epochs: 100
 - name: TEDPolicy
-  max_history: 10
+  max_history: 20
   epochs: 100
   constrain_similarities: true

@@ -5,56 +5,48 @@ stories:
 - story: happy path
   steps:
   - intent: inform_need_item
+  - action: office_supplies_form
+  - active_loop: office_supplies_form
   - slot_was_set:
-    - office_supplies: ручки
-  - action: utter_pen
-  - intent: pen_color
+      - office_supplies: ручка  
   - slot_was_set:
-    - color: 
-  - action: utter_color
-  - intent: kind
+      - color: 
   - slot_was_set:
-    - type: 
-  - action: utter_username
-  - intent: user_name
+      - type: 
   - slot_was_set:
-    - name: 
+      - quantity:
+  - slot_was_set:
+      - name:
+  - active_loop: null 
   - action: action_record_need_item
 
-  # - action: utter_kind
-  # - intent: thickness_line
-
-- story: sad path 1
+- story: happy path
   steps:
   - intent: inform_need_item
+  - action: office_supplies_form
+  - active_loop: office_supplies_form
   - slot_was_set:
-    - office_supplies: карандаша
-  - action: utter_pensil
+      - office_supplies: карандаш  
+  - slot_was_set:
+      - type: 
+  - slot_was_set:
+      - quantity:
+  - slot_was_set:
+      - name: 
+  - active_loop: null
   - action: action_record_need_item
 
-- story: sad path 2
+
+- story: happy path3
   steps:
   - intent: inform_need_item
+  - action: office_supplies_form
+  - active_loop: office_supplies_form
   - slot_was_set:
-    - office_supplies: ластика
-  - action: utter_eraser
+      - office_supplies: ластик  
+  - slot_was_set:
+      - quantity:
+  - slot_was_set:
+      - name: 
+  - active_loop: null
   - action: action_record_need_item
-
-- story: sss
-  steps:
-  - intent: kind
-  - slot_was_set:
-    - type: 
-  - action: utter_username
-  - intent: user_name
-  - slot_was_set:
-    - name: 
-  - action: action_record_need_item
-  
-  ## проверка работы
-# - story: happy path 2
-#   steps:
-#   - intent: inform_need_item
-#   - slot_was_set:
-#     - office_supplies: ручки
-#   - action: action_record_need_item

@@ -9,6 +9,7 @@ nlu:
     - белый
     - синий
     - красный
+    - серый
 
 - lookup: type
   examples: |
@@ -20,20 +21,20 @@ nlu:
     - простую
     - механический карандаш
     - механический
-
-- lookup: line_thickness
-  examples: |
-    - 0.1 мм
-    - 0.5 мм
+    - простой
+    - обычный
+    - классический
 
 - intent: inform_need_item
   examples: |
-    - У меня нет [ручки](office_supplies)
+    - У меня нет [ручки](office_supplies:ручка)
     - У меня нет [карандаша](office_supplies)
     - У меня нет [ластика](office_supplies)
     - Мне нужна [ручка](office_supplies)
+    - Мне нужен [карандаш](office_supplies)
+    - Мне нужен [ластик](office_supplies)    
 
-- intent: pen_color
+- intent: item_color
   examples: |
     - [чёрный](color)
     - [черный](color)
@@ -51,13 +52,20 @@ nlu:
     - нужно приобрести [шариковую](type) ручку
     - хочу приобрести [шариковую](type) ручку
     - дай мне [гелевую](type) ручку
+    - мне нужен [механический](type) карандаш
 
-- intent: thickness_line
+- intent: quantity
   examples: |
-    - 0.1
-    - 0.5
-    - 0.1 мм
-    - 0.5 мм 
+    - [1](number) ручка
+    - [2](number) карандаша 
+    - [3](number) ластика
+    - [4](number) ручки
+    - [58](number) карандашей
+    - [6](number) ластиков
+    - [7](number) 
+    - [8](number)
+    - [9](number)
+    - [36](number) 
 
 - intent: user_name
   examples: |
