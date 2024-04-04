@@ -36,8 +36,11 @@ class ValidateOfficeSuppliesForm(FormValidationAction):
             return {"office_supplies": None}
 
     async def required_slots(
-            self, slots_mapped_in_domain: List[Text], dispatcher: CollectingDispatcher,
-            tracker: Tracker, domain: DomainDict) -> List[Text]:
+            self, 
+            slots_mapped_in_domain: List[Text], 
+            dispatcher: CollectingDispatcher,
+            tracker: Tracker, domain: DomainDict
+            ) -> List[Text]:
         office_supplies = tracker.get_slot("office_supplies")
         
         if office_supplies == "ручка":
@@ -57,7 +60,10 @@ class GoogleSheetsManager:
         creds_service = ServiceAccountCredentials.from_json_keyfile_dict(self.service_account_json, scopes).authorize(httplib2.Http())
         return build('sheets', 'v4', http=creds_service)
 
-    def record_to_sheet(self, user_name, item_name: str, description: str, quantity, status: str = 'Заявка принята', range_name: str = 'Лист1!A:C'):
+    def record_to_sheet(self, user_name, 
+                        item_name: str, description: str, 
+                        quantity, status: str = 'Заявка принята', 
+                        range_name: str = 'Лист1!A:C'):
         service = self.get_service_sacc()
         values = [[user_name, item_name, description, quantity, status]]
         body = {'values': values}
@@ -67,13 +73,37 @@ class GoogleSheetsManager:
             valueInputOption='RAW', body=body, insertDataOption='INSERT_ROWS').execute()
         
         print(f"{result.get('updates').get('updatedCells')} cells appended.")
+    
+    def aggregate_and_record_to_sheet(self, user_name, item_name, quantity):
+        service = self.get_service_sacc()
+        range_name = 'Лист2!A:C'
+        
+        result = service.spreadsheets().values().get(spreadsheetId=self.spreadsheet_id, range=range_name).execute()
+        rows = result.get('values', [])
 
+        for row in rows:
+            if row[0] == user_name and row[1] == item_name:
+                new_quantity = int(row[2]) + quantity
+                service.spreadsheets().values().update(
+                    spreadsheetId=self.spreadsheet_id, range=f'Лист2!C{rows.index(row) + 1}',
+                    valueInputOption='RAW', body={'values': [[new_quantity]]}).execute()
+                print("Data aggregated and recorded on the second sheet.")
+                return
+
+        values = [[user_name, item_name, quantity]]
+        service.spreadsheets().values().append(
+            spreadsheetId=self.spreadsheet_id, range=range_name,
+            valueInputOption='RAW', body={'values': values}, insertDataOption='INSERT_ROWS').execute()
+        print("Data aggregated and recorded on the second sheet.")
 
 class ActionRecordMissingItem(Action):
     def name(self) -> Text:
         return "action_record_need_item"
 
-    def run(self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+    def run(self, dispatcher: CollectingDispatcher, 
+            tracker: Tracker, 
+            domain: Dict[Text, Any]
+            ) -> List[Dict[Text, Any]]:
         manager = GoogleSheetsManager(SERVICE_ACCOUNT, SPREADSHEET_ID)
 
         missing_item = morph.parse(tracker.get_slot('office_supplies'))[0]
@@ -105,12 +135,13 @@ class ActionRecordMissingItem(Action):
 
         if missing_item:
             manager.record_to_sheet(user_name, missing_item.normal_form, description_item, quantity)
+            manager.aggregate_and_record_to_sheet(user_name, missing_item.normal_form, quantity)
             dispatcher.utter_message(text=f"Записал, что у вас нет {missing_item.inflect({'sing', 'gent'}).word}. Что-нибудь еще?")
         else:
             dispatcher.utter_message(text="Я не понимаю, что вам не нужно. Можете уточнить?")
         
         return []
-    
+
 
 
 
