@@ -27,7 +27,7 @@ nlu:
 
 - intent: inform_need_item
   examples: |
-    - У меня нет [ручки](office_supplies:ручка)
+    - У меня нет [ручки](office_supplies)
     - У меня нет [карандаша](office_supplies)
     - У меня нет [ластика](office_supplies)
     - Мне нужна [ручка](office_supplies)
@@ -80,3 +80,4 @@ nlu:
     - [Быков Андрей Григорьевич](name)
     - [Виноградов Александр Ильич](name)
     - [Журавлев Тимофей Сергеевич](name)
+    

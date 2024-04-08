@@ -2,7 +2,7 @@
 # https://rasa.com/docs/rasa/model-configuration/
 recipe: default.v1
 
-assistant_id: 20240403-153240-matte-himalayan
+assistant_id: 20240408-140908-intense-belt
 # Configuration for Rasa NLU.
 # https://rasa.com/docs/rasa/nlu/components/
 language: ru

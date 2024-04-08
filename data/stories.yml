@@ -2,51 +2,42 @@ version: "3.1"
 
 stories:
 
-- story: happy path
+- story: pen order
   steps:
   - intent: inform_need_item
   - action: office_supplies_form
   - active_loop: office_supplies_form
+  - active_loop: null 
   - slot_was_set:
       - office_supplies: ручка  
-  - slot_was_set:
       - color: 
-  - slot_was_set:
       - type: 
-  - slot_was_set:
       - quantity:
-  - slot_was_set:
       - name:
-  - active_loop: null 
   - action: action_record_need_item
 
-- story: happy path
+- story: pencil order
   steps:
   - intent: inform_need_item
   - action: office_supplies_form
   - active_loop: office_supplies_form
+  - active_loop: null
   - slot_was_set:
       - office_supplies: карандаш  
-  - slot_was_set:
       - type: 
-  - slot_was_set:
       - quantity:
-  - slot_was_set:
       - name: 
-  - active_loop: null
   - action: action_record_need_item
 
 
-- story: happy path3
+- story: eraser order
   steps:
   - intent: inform_need_item
   - action: office_supplies_form
   - active_loop: office_supplies_form
+  - active_loop: null
   - slot_was_set:
       - office_supplies: ластик  
-  - slot_was_set:
       - quantity:
-  - slot_was_set:
       - name: 
-  - active_loop: null
   - action: action_record_need_item
