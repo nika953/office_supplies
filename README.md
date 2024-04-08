@@ -69,7 +69,7 @@ http://localhost:8200/ui/vault/secrets/secret/show
 
 1. Склонируйте репозиторий
 	```bash
-	git clone 
+	git clone https://github.com/nika953/office_supplies.git
 	```
 2. Создание и активация виртуального окружения venv.
 
