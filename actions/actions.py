@@ -183,12 +183,7 @@ class ActionRecordMissingItem(Action):
         if not type_item:
             type_item = ""
         else:
-            if missing_item.tag.gender == "masc":
-                type_item = f"Вид: {morph.parse(type_item)[0].inflect({'masc', 'sing', 'nomn'}).word}"
-            if missing_item.tag.gender == "femn":
-                type_item = f"Вид: {morph.parse(type_item)[0].inflect({'femn', 'sing', 'nomn'}).word}"
-            if missing_item.tag.gender == "neut":
-                type_item = f"Вид: {morph.parse(type_item)[0].inflect({'neut', 'sing', 'nomn'}).word}"
+            type_item = f"Вид: {morph.parse(type_item)[0].inflect({missing_item.tag.gender, 'sing', 'nomn'}).word}"
 
         if color_item == "" and type_item == "":
             description_item = ''
